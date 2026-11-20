@@ -1,7 +1,6 @@
 package sample.view;
 
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
@@ -10,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 
 import sample.model.Enrollment;
@@ -19,7 +19,7 @@ public class EnrollmentView {
     private final BorderPane root;
 
     private TextField studentIdField;
-    private TextField courseIdField;
+    private TextField courseCodeField;
 
     private Button enrollButton;
     private TableView<Enrollment> enrollmentTable;
@@ -64,18 +64,18 @@ public class EnrollmentView {
         Label studentLabel = new Label("Student ID:");
 
         studentIdField = new TextField();
-        studentIdField.setPromptText("Enter Student ID");
+        studentIdField.setPromptText("e.g. 1");
 
-        Label courseLabel = new Label("Course ID:");
+        Label courseLabel = new Label("Course Code:");
 
-        courseIdField = new TextField();
-        courseIdField.setPromptText("Enter Course ID");
+        courseCodeField = new TextField();
+        courseCodeField.setPromptText("e.g. CS101");
 
         form.add(studentLabel, 0, 0);
         form.add(studentIdField, 1, 0);
 
         form.add(courseLabel, 0, 1);
-        form.add(courseIdField, 1, 1);
+        form.add(courseCodeField, 1, 1);
 
         enrollButton = new Button("Enroll Student");
 
@@ -116,6 +116,8 @@ public class EnrollmentView {
                 enrollmentTable
         );
 
+        VBox.setVgrow(enrollmentTable, Priority.ALWAYS);
+
         return content;
     }
 
@@ -127,8 +129,8 @@ public class EnrollmentView {
         return studentIdField;
     }
 
-    public TextField getCourseIdField() {
-        return courseIdField;
+    public TextField getCourseCodeField() {
+        return courseCodeField;
     }
 
     public Button getEnrollButton() {

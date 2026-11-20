@@ -1,12 +1,11 @@
-
 package sample.controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.scene.control.Alert;
 
 import sample.model.Enrollment;
 import sample.service.EnrollmentService;
+import sample.util.AlertHelper;
 import sample.view.EnrollmentView;
 
 public class EnrollmentController {
@@ -46,14 +45,14 @@ public class EnrollmentController {
             String studentText =
                     view.getStudentIdField().getText().trim();
 
-            String courseText =
-                    view.getCourseIdField().getText().trim();
+            String courseCode =
+                    view.getCourseCodeField().getText().trim();
 
-            if (studentText.isEmpty() || courseText.isEmpty()) {
+            if (studentText.isEmpty() || courseCode.isEmpty()) {
 
-                showAlert(
+                AlertHelper.showError(
                         "Missing Data",
-                        "Please enter Student ID and Course ID."
+                        "Please enter Student ID and Course Code."
                 );
 
                 return;
@@ -61,37 +60,35 @@ public class EnrollmentController {
 
             int studentId = Integer.parseInt(studentText);
 
-            String courseCode = courseText;
-
             service.enrollStudent(studentId, courseCode);
 
             loadEnrollments();
 
             view.getStudentIdField().clear();
-            view.getCourseIdField().clear();
+            view.getCourseCodeField().clear();
 
-            showAlert(
+            AlertHelper.showInfo(
                     "Success",
                     "Student enrolled successfully."
             );
 
         } catch (NumberFormatException e) {
 
-            showAlert(
+            AlertHelper.showError(
                     "Invalid Data",
-                    "Student ID and Course ID must be numbers."
+                    "Student ID must be a number."
             );
 
         } catch (IllegalArgumentException e) {
 
-            showAlert(
+            AlertHelper.showError(
                     "Enrollment Error",
                     e.getMessage()
             );
 
         } catch (Exception e) {
 
-            showAlert(
+            AlertHelper.showError(
                     "Error",
                     "Something went wrong: " + e.getMessage()
             );
@@ -107,19 +104,7 @@ public class EnrollmentController {
         view.getEnrollmentTable().refresh();
     }
 
-    private void showAlert(String title, String message) {
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-
-        alert.showAndWait();
-    }
-
     public EnrollmentView getView() {
         return view;
     }
 }
-
