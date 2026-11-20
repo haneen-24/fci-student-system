@@ -1,189 +1,183 @@
-package sample.view;                                              // package الـ views
+package sample.view;                                             
 
-import javafx.geometry.Insets;                                    // للمسافات الداخلية (padding)
-import javafx.geometry.Pos;                                       // لمحاذاة العناصر
-import javafx.scene.Scene;                                        // المشهد اللي بيتحط جوه النافذة
-import javafx.scene.control.Button;                               // الزراير
-import javafx.scene.control.Label;                                // النصوص الثابتة
-import javafx.scene.control.TableColumn;                          // عمود في الجدول
-import javafx.scene.control.TableView;                            // الجدول نفسه
-import javafx.scene.control.TextField;                            // خانة الكتابة
-import javafx.scene.control.cell.PropertyValueFactory;            // بيربط العمود بـ getter في Course
-import javafx.scene.layout.GridPane;                              // ترتيب على شكل شبكة (للفورم)
-import javafx.scene.layout.HBox;                                  // ترتيب أفقي
-import javafx.scene.layout.Priority;                              // أولوية أخذ المساحة
-import javafx.scene.layout.VBox;                                  // ترتيب رأسي
-import javafx.stage.Modality;                                     // نوع النافذة (مانعة للي وراها)
-import javafx.stage.Stage;                                        // النافذة
+import javafx.geometry.Insets;                                    
+import javafx.geometry.Pos;                                       
+import javafx.scene.Scene;                                        
+import javafx.scene.control.Button;                              
+import javafx.scene.control.Label;                               
+import javafx.scene.control.TableColumn;                         
+import javafx.scene.control.TableView;                            
+import javafx.scene.control.TextField;                            
+import javafx.scene.control.cell.PropertyValueFactory;           
+import javafx.scene.layout.GridPane;                              
+import javafx.scene.layout.HBox;                                  
+import javafx.scene.layout.Priority;                             
+import javafx.scene.layout.VBox;                                  
+import javafx.stage.Modality;                                     
+import javafx.stage.Stage;                                        
 
-import sample.model.Course;                                       // الـ model بتاع المادة
+import sample.model.Course;                                       
+public class CourseView {                                        
 
-public class CourseView {                                         // الشكل بس (S من SOLID)
+    private final VBox root;                                      
+    private TextField searchField;                                
+    private TableView<Course> courseTable;                        
+    private Button addButton;                                     
+    private Button editButton;                                   
 
-    private final VBox root;                                      // الحاوية الرئيسية للصفحة
-    private TextField searchField;                                // خانة البحث
-    private TableView<Course> courseTable;                        // جدول المواد
-    private Button addButton;                                     // زرار الإضافة
-    private Button editButton;                                    // زرار التعديل
+    public CourseView() {                                         
+        root = new VBox(20);                                      
+        root.setPadding(new Insets(30));                         
 
-    public CourseView() {                                         // الـ constructor: بيبني الصفحة
-        root = new VBox(20);                                      // حاوية رأسية والمسافة بين العناصر 20
-        root.setPadding(new Insets(30));                          // مسافة 30 من كل الجوانب
+        Label title = new Label("Courses");                       
+        Label description = new Label("Search and manage courses");  
+        VBox titleSection = new VBox(5, title, description);     
 
-        Label title = new Label("Courses");                       // عنوان الصفحة
-        Label description = new Label("Search and manage courses");  // وصف صغير تحت العنوان
-        VBox titleSection = new VBox(5, title, description);      // اجمعهم فوق بعض بمسافة 5
-
-        root.getChildren().addAll(                                // ضيف الأجزاء للصفحة بالترتيب:
-                titleSection,                                     // 1) العنوان
-                createSearchSection(),                            // 2) البحث + الزراير
-                createCourseTable()                               // 3) الجدول
+        root.getChildren().addAll(                                
+                titleSection,                                     
+                createSearchSection(),                           
+                createCourseTable()                              
         );
 
-        VBox.setVgrow(courseTable, Priority.ALWAYS);              // الجدول ياخد باقي المساحة المتاحة
+        VBox.setVgrow(courseTable, Priority.ALWAYS);              
+    }
+    private HBox createSearchSection() {                          
+        searchField = new TextField();                           
+        searchField.setPromptText("Search by name or code...");  
+        searchField.setPrefHeight(40);                           
+
+        addButton = new Button("➕ Add Course");                 
+        editButton = new Button("✏ Edit Course");                
+        addButton.setPrefHeight(40);                              
+        editButton.setPrefHeight(40);                            
+
+        HBox box = new HBox(10, searchField, addButton, editButton);  
+        box.setAlignment(Pos.CENTER_LEFT);                        
+        HBox.setHgrow(searchField, Priority.ALWAYS);              
+        return box;                                               
     }
 
-    private HBox createSearchSection() {                          // بيبني صف البحث والزراير
-        searchField = new TextField();                            // اعمل خانة البحث
-        searchField.setPromptText("Search by name or code...");   // النص الرمادي جواها
-        searchField.setPrefHeight(40);                            // الارتفاع
+    private TableView<Course> createCourseTable() {               
+        courseTable = new TableView<>();                         
 
-        addButton = new Button("➕ Add Course");                  // زرار الإضافة
-        editButton = new Button("✏ Edit Course");                 // زرار التعديل
-        addButton.setPrefHeight(40);                              // نفس ارتفاع خانة البحث
-        editButton.setPrefHeight(40);                             // نفس الارتفاع
+        TableColumn<Course, String> codeColumn =                  
+                new TableColumn<>("Code");                       
+        codeColumn.setCellValueFactory(                           
+                new PropertyValueFactory<>("code"));              
 
-        HBox box = new HBox(10, searchField, addButton, editButton);  // صف أفقي فيه التلاتة بمسافة 10
-        box.setAlignment(Pos.CENTER_LEFT);                        // محاذاة لليسار ومنتصف رأسياً
-        HBox.setHgrow(searchField, Priority.ALWAYS);              // خانة البحث ياخد العرض الفاضي
-        return box;                                               // رجّع الصف
-    }
+        TableColumn<Course, String> nameColumn =                  
+                new TableColumn<>("Course Name");                
+        nameColumn.setCellValueFactory(                           
+                new PropertyValueFactory<>("name"));              
 
-    private TableView<Course> createCourseTable() {               // بيبني الجدول
-        courseTable = new TableView<>();                          // جدول فاضي بيعرض Course
+        TableColumn<Course, Integer> hoursColumn =                
+                new TableColumn<>("Credit Hours");                
+        hoursColumn.setCellValueFactory(                          
+                new PropertyValueFactory<>("creditHours"));       
 
-        TableColumn<Course, String> codeColumn =                  // عمود الكود
-                new TableColumn<>("Code");                        // عنوان العمود
-        codeColumn.setCellValueFactory(                           // قوله منين يجيب القيمة
-                new PropertyValueFactory<>("code"));              // بينادي getCode()
-
-        TableColumn<Course, String> nameColumn =                  // عمود الاسم
-                new TableColumn<>("Course Name");                 // عنوان العمود
-        nameColumn.setCellValueFactory(                           // منين يجيب القيمة
-                new PropertyValueFactory<>("name"));              // بينادي getName()
-
-        TableColumn<Course, Integer> hoursColumn =                // عمود الساعات
-                new TableColumn<>("Credit Hours");                // عنوان العمود
-        hoursColumn.setCellValueFactory(                          // منين يجيب القيمة
-                new PropertyValueFactory<>("creditHours"));       // بينادي getCreditHours()
-
-        courseTable.getColumns().addAll(                          // ضيف الأعمدة للجدول
+        courseTable.getColumns().addAll(                          
                 codeColumn, nameColumn, hoursColumn);
-        courseTable.setColumnResizePolicy(                        // خلي الأعمدة تملا عرض الجدول
+        courseTable.setColumnResizePolicy(                        
                 TableView.CONSTRAINED_RESIZE_POLICY);
-        return courseTable;                                       // رجّع الجدول
+        return courseTable;                                       
     }
 
-    public VBox getRoot() {                                       // الصفحة كلها (MainController هيعرضها في النص)
+    public VBox getRoot() {                                       
         return root;
     }
 
-    public TextField getSearchField() {                           // الـ Controller محتاجها عشان يسمع للبحث
+    public TextField getSearchField() {                           
         return searchField;
     }
 
-    public TableView<Course> getCourseTable() {                   // الـ Controller هيحط فيها البيانات
+    public TableView<Course> getCourseTable() {                   
         return courseTable;
     }
 
-    public Button getAddButton() {                                // الـ Controller هيربط الضغطة
+    public Button getAddButton() {                                
         return addButton;
     }
 
-    public Button getEditButton() {                               // الـ Controller هيربط الضغطة
+    public Button getEditButton() {                               
         return editButton;
     }
 
-    // =====================================================================
-    // نافذة الإضافة/التعديل (نافذة واحدة للاتنين)
-    // =====================================================================
+    public static class CourseForm {                              
 
-    public static class CourseForm {                              // كلاس داخلي، عشان نفضل في 5 ملفات
+        private final Stage stage;                                
+        private final TextField codeField;                        
+        private final TextField nameField;                       
+        private final TextField hoursField;                       
+        private final Button saveButton;                          
+        private final Button cancelButton;                        
 
-        private final Stage stage;                                // نافذة الفورم
-        private final TextField codeField;                        // خانة الكود
-        private final TextField nameField;                        // خانة الاسم
-        private final TextField hoursField;                       // خانة الساعات
-        private final Button saveButton;                          // زرار الحفظ
-        private final Button cancelButton;                        // زرار الإلغاء
+        public CourseForm(String windowTitle, Course course) {    
+            stage = new Stage();                                  
+            stage.setTitle(windowTitle);                         
+            stage.initModality(Modality.APPLICATION_MODAL);       
 
-        public CourseForm(String windowTitle, Course course) {    // course = null يعني إضافة، غير كده تعديل
-            stage = new Stage();                                  // اعمل نافذة جديدة
-            stage.setTitle(windowTitle);                          // عنوانها
-            stage.initModality(Modality.APPLICATION_MODAL);       // امنع الضغط على الشاشة اللي ورا لحد ما تتقفل
+            codeField = new TextField();                          
+            nameField = new TextField();                          
+            hoursField = new TextField();                         
+            codeField.setPromptText("e.g. CS101");                
+            nameField.setPromptText("e.g. Programming 1");        
+            hoursField.setPromptText("e.g. 3");                   
 
-            codeField = new TextField();                          // خانة الكود فاضية
-            nameField = new TextField();                          // خانة الاسم فاضية
-            hoursField = new TextField();                         // خانة الساعات فاضية
-            codeField.setPromptText("e.g. CS101");                // مثال للمستخدم
-            nameField.setPromptText("e.g. Programming 1");        // مثال للمستخدم
-            hoursField.setPromptText("e.g. 3");                   // مثال للمستخدم
-
-            if (course != null) {                                 // لو ده تعديل (فيه مادة جاية)
-                codeField.setText(course.getCode());              // املا الكود القديم
-                nameField.setText(course.getName());              // املا الاسم القديم
-                hoursField.setText(                               // املا الساعات القديمة
-                        String.valueOf(course.getCreditHours())); // حوّل الرقم لنص
+            if (course != null) {                                 
+                codeField.setText(course.getCode());              
+                nameField.setText(course.getName());              
+                hoursField.setText(                               
+                        String.valueOf(course.getCreditHours())); 
             }
 
-            GridPane form = new GridPane();                       // شبكة للفورم
-            form.setHgap(15);                                     // مسافة أفقية بين الأعمدة
-            form.setVgap(15);                                     // مسافة رأسية بين الصفوف
-            form.add(new Label("Course Code"), 0, 0);             // عمود 0 صف 0
-            form.add(codeField, 1, 0);                            // عمود 1 صف 0
-            form.add(new Label("Course Name"), 0, 1);             // عمود 0 صف 1
-            form.add(nameField, 1, 1);                            // عمود 1 صف 1
-            form.add(new Label("Credit Hours"), 0, 2);            // عمود 0 صف 2
-            form.add(hoursField, 1, 2);                           // عمود 1 صف 2
+            GridPane form = new GridPane();                      
+            form.setHgap(15);                                     
+            form.setVgap(15);                                    
+            form.add(new Label("Course Code"), 0, 0);             
+            form.add(codeField, 1, 0);                            
+            form.add(new Label("Course Name"), 0, 1);             
+            form.add(nameField, 1, 1);                            
+            form.add(new Label("Credit Hours"), 0, 2);           
+            form.add(hoursField, 1, 2);                           
 
-            saveButton = new Button("Save");                      // زرار الحفظ
-            cancelButton = new Button("Cancel");                  // زرار الإلغاء
-            HBox buttons = new HBox(10, saveButton, cancelButton);// الزراير جنب بعض
-            buttons.setAlignment(Pos.CENTER_RIGHT);               // على اليمين
+            saveButton = new Button("Save");                     
+            cancelButton = new Button("Cancel");                  
+            HBox buttons = new HBox(10, saveButton, cancelButton);
+            buttons.setAlignment(Pos.CENTER_RIGHT);               
 
-            VBox formRoot = new VBox(20, new Label(windowTitle),  // العنوان + الفورم + الزراير فوق بعض
+            VBox formRoot = new VBox(20, new Label(windowTitle),  
                     form, buttons);
-            formRoot.setPadding(new Insets(25));                  // مسافة من الجوانب
+            formRoot.setPadding(new Insets(25));                  
 
-            stage.setScene(new Scene(formRoot, 420, 280));        // حط المحتوى في النافذة بمقاس 420x280
+            stage.setScene(new Scene(formRoot, 420, 280));        
         }
 
-        public TextField getCodeField() {                         // getter للكود
+        public TextField getCodeField() {                         
             return codeField;
         }
 
-        public TextField getNameField() {                         // getter للاسم
+        public TextField getNameField() {                         
             return nameField;
         }
 
-        public TextField getHoursField() {                        // getter للساعات
+        public TextField getHoursField() {                        
             return hoursField;
         }
 
-        public Button getSaveButton() {                           // getter لزرار الحفظ
+        public Button getSaveButton() {                           
             return saveButton;
         }
 
-        public Button getCancelButton() {                         // getter لزرار الإلغاء
+        public Button getCancelButton() {                         
             return cancelButton;
         }
 
-        public Stage getStage() {                                 // getter للنافذة (عشان الـ Controller يقفلها)
+        public Stage getStage() {                                 
             return stage;
         }
 
-        public void show() {                                      // اعرض النافذة
-            stage.showAndWait();                                  // وانتظر لحد ما تتقفل
+        public void show() {                                      
+            stage.showAndWait();                                  
         }
     }
 }

@@ -18,7 +18,7 @@ public class CourseService {
         this.validator=validator;
     }
     
-    public List<Course> getall(){
+    public List<Course> getAll(){
         return repository.findAll();
     }
 
