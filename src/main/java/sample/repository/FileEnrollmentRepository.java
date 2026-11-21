@@ -1,30 +1,27 @@
-package sample.repository;                                           // نفس الـ package
+package sample.repository;
 
-import sample.model.Enrollment;                                      // الـ model
+import sample.model.Enrollment;
 
-public class FileEnrollmentRepository                                // بيورّث الشغل المشترك
-        extends FileRepository<Enrollment> {
+public class FileEnrollmentRepository extends FileRepository<Enrollment> {
 
-    public FileEnrollmentRepository() {                              // الـ constructor
-        super("data/enrollments.txt");                               // مسار ملف التسجيلات
+    public FileEnrollmentRepository() {
+        super("data/enrollments.txt");
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected String toLine(Enrollment e) {                          // تسجيل ← سطر
-        return e.getStudentId() + "," + e.getCourseCode();           // studentId,courseCode
+    @Override
+    protected String toLine(Enrollment e) {
+        return e.getStudentId() + "," + e.getCourseCode();
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected Enrollment fromLine(String line) {                     // سطر ← تسجيل
-        String[] p = line.split(",");                                // قسّم عند الفاصلة
-        return new Enrollment(Integer.parseInt(p[0].trim()),         // رقم الطالب
-                p[1].trim());                                        // كود المادة
+    @Override
+    protected Enrollment fromLine(String line) {
+        String[] p = line.split(",");
+        return new Enrollment(Integer.parseInt(p[0].trim()), p[1].trim());
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected boolean sameKey(Enrollment a, Enrollment b) {          // المفتاح = الطالب + المادة
-        return a.getStudentId() == b.getStudentId()                  // نفس الطالب
-                && a.getCourseCode()
-                        .equalsIgnoreCase(b.getCourseCode());        // ونفس المادة
+    @Override
+    protected boolean sameKey(Enrollment a, Enrollment b) {
+        return a.getStudentId() == b.getStudentId()
+                && a.getCourseCode().equalsIgnoreCase(b.getCourseCode());
     }
 }
