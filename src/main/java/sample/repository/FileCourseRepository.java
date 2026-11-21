@@ -1,27 +1,26 @@
-package sample.repository;                                           // نفس الـ package
+package sample.repository;
 
-import sample.model.Course;                                          // الـ model
+import sample.model.Course;
 
-public class FileCourseRepository extends FileRepository<Course> {   // بيورّث الشغل المشترك
+public class FileCourseRepository extends FileRepository<Course> {
 
-    public FileCourseRepository() {                                  // الـ constructor
-        super("data/courses.txt");                                   // مسار ملف المواد
+    public FileCourseRepository() {
+        super("data/courses.txt");
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected String toLine(Course c) {                              // مادة ← سطر
-        return c.getCode() + "," + c.getName() + "," + c.getCreditHours();  // code,name,creditHours
+    @Override
+    protected String toLine(Course c) {
+        return c.getCode() + "," + c.getName() + "," + c.getCreditHours();
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected Course fromLine(String line) {                         // سطر ← مادة
-        String[] p = line.split(",");                                // قسّم عند الفاصلة
-        return new Course(p[0].trim(), p[1].trim(),                  // الكود والاسم
-                Integer.parseInt(p[2].trim()));                      // والساعات كرقم
+    @Override
+    protected Course fromLine(String line) {
+        String[] p = line.split(",");
+        return new Course(p[0].trim(), p[1].trim(), Integer.parseInt(p[2].trim()));
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected boolean sameKey(Course a, Course b) {                  // المفتاح = الكود
-        return a.getCode().equalsIgnoreCase(b.getCode());            // نفس الكود؟
+    @Override
+    protected boolean sameKey(Course a, Course b) {
+        return a.getCode().equalsIgnoreCase(b.getCode());
     }
 }
