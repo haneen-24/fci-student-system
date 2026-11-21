@@ -1,31 +1,30 @@
-package sample.repository;                                           // نفس الـ package
+package sample.repository;
 
-import sample.model.Grade;                                           // الـ model
+import sample.model.Grade;
 
-public class FileGradeRepository extends FileRepository<Grade> {     // بيورّث الشغل المشترك
+public class FileGradeRepository extends FileRepository<Grade> {
 
-    public FileGradeRepository() {                                   // الـ constructor
-        super("data/grades.txt");                                    // مسار ملف الدرجات
+    public FileGradeRepository() {
+        super("data/grades.txt");
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected String toLine(Grade g) {                               // درجة ← سطر
-        return g.getStudentId() + "," + g.getCourseCode()            // studentId,courseCode
-                + "," + g.getScore();                                // ,score
+    @Override
+    protected String toLine(Grade g) {
+        return g.getStudentId() + "," + g.getCourseCode() + "," + g.getScore();
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected Grade fromLine(String line) {                          // سطر ← درجة
-        String[] p = line.split(",");                                // قسّم عند الفاصلة
-        return new Grade(Integer.parseInt(p[0].trim()),              // رقم الطالب
-                p[1].trim(),                                         // كود المادة
-                Double.parseDouble(p[2].trim()));                    // الدرجة
+    @Override
+    protected Grade fromLine(String line) {
+        String[] p = line.split(",");
+        return new Grade(
+                Integer.parseInt(p[0].trim()),
+                p[1].trim(),
+                Double.parseDouble(p[2].trim()));
     }
 
-    @Override                                                        // من الكلاس الأساسي
-    protected boolean sameKey(Grade a, Grade b) {                    // المفتاح = الطالب + المادة
-        return a.getStudentId() == b.getStudentId()                  // نفس الطالب
-                && a.getCourseCode()
-                        .equalsIgnoreCase(b.getCourseCode());        // ونفس المادة
+    @Override
+    protected boolean sameKey(Grade a, Grade b) {
+        return a.getStudentId() == b.getStudentId()
+                && a.getCourseCode().equalsIgnoreCase(b.getCourseCode());
     }
 }
