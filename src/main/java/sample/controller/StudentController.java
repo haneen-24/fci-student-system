@@ -9,7 +9,7 @@ import sample.model.Student;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import sample.util.AlertHelper;
+import javafx.scene.control.Alert;
 
 public class StudentController {
 
@@ -241,13 +241,19 @@ public class StudentController {
 
         return view;
     }
-
-    private void showError(String message) {                  
-        AlertHelper.showError("Error", message);             
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
-    private void showSuccess(String message) {               
-        AlertHelper.showInfo("Success", message);             
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
-    
+        
 }
+
